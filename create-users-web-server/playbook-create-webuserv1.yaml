@@ -1,0 +1,26 @@
+-
+  name: Add users to the web_server using variables
+  hosts: all
+  gather_facts: false
+  vars:
+    users:
+      - name: cartola
+        uid: 1005
+      - name: eddie
+        uid: 1006
+      - name: katia
+        uid: 1007
+
+  tasks:
+    - user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid }}"
+        state: present
+        password: "{{ ansible_ssh_pass | password_hash ('sha512', 'A512') }}"
+        shell: /bin/bash
+        groups: osboxes,root
+        append: yes
+
+      loop: "{{ users }}"
+
+      when: 'ansible_host=="10.0.0.122"'
