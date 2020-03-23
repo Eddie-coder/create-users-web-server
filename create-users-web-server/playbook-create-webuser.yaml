@@ -1,0 +1,22 @@
+-
+  name: Create users on web_server
+  hosts: all
+  gather_facts: false
+  tasks:
+    - user:
+        name: "{{ item }}"
+        state: present
+        password: "{{ ansible_ssh_pass | password_hash('sha512', 'A512') }}"
+        shell: /bin/bash
+        groups: osboxes,root
+        append: yes
+
+      loop:
+        - cartola
+        - edvaldo
+        - katia
+        - kevin
+        - rafi
+
+
+      when: 'ansible_host=="10.0.0.122"'
